@@ -16,3 +16,12 @@ usage:
 simply launch and create a new file. 
 click on the buttons and use the console to change parameters such as colouration,
 or the current tool being used.
+
+forewarning; not all of these are implemented yet:
+supports:
+Layers,
+Layer renaming,
+a saving and exporting feature,
+different brushes,
+chaining addons,
+rescaling image resolution in realtime.
