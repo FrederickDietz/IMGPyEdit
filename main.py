@@ -104,14 +104,16 @@ def set_resolution():
 
         # Update the global canvas resolution
         canvas_resolution = new_resolution
-
+        
+        
         # Resize all layers to match the new resolution
         for layer in layers:
-            resized_image = layer["image"].resize(new_resolution, Image.ANTIALIAS)
+            resized_image = layer["image"].resize(new_resolution, Image.Resampling.LANCZOS)
             layer["image"] = resized_image
         print(f"Resolution set to {new_width}x{new_height}")
     except ValueError:
         print("Invalid resolution input! Using default resolution.")
+
         
 
 def select_tool():
@@ -199,7 +201,8 @@ def handle_events():
             # Set resolution (Prompt user for input when button is clicked)
             elif CANVAS_WIDTH + 160 < mouse_x < CANVAS_WIDTH + 240 and 280 < mouse_y < 310:
                 resolution_input = input_resolution()  # Ask for resolution input from the user
-
+                set_resolution()
+                
             # Tools button click
             elif CANVAS_WIDTH + 20 < mouse_x < CANVAS_WIDTH + 170 and 70 < mouse_y < 110:
                 if available_tools:
@@ -247,12 +250,13 @@ def draw_canvas():
     # Draw each layer (if visible) onto the canvas surface
     for layer in layers:
         if layer["visible"]:
-            # Convert the layer image (PIL) to a pygame surface
             pygame_image = pygame.image.fromstring(layer["image"].tobytes(), layer["image"].size, "RGBA")
             canvas_surface.blit(pygame_image, (0, 0))
 
-    # Instead of always scaling to the default width and height, scale to the new resolution
-    screen.blit(pygame.transform.scale(canvas_surface, (canvas_resolution[0], canvas_resolution[1])), (0, 50))
+    # Scale the canvas to fit the original display size (if necessary)
+    scaled_canvas = pygame.transform.scale(canvas_surface, (DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT))
+    screen.blit(scaled_canvas, (0, 50))
+
 
 
 def main():
